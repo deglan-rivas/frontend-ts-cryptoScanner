@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { commonCurrencies } from "../data";
 import { CryptoCurrenciesSchema } from "../schemas";
-import { CryptoCurrencies } from "../types";
-
-
-
+import { CryptoCurrencies, Search } from "../types";
 
 export default function CryptoForm() {
+  const initialSearch: Search = {
+    commonCoin: "",
+    cryptoCoin: ""
+  }
+
   const [topCryptoCurrencies, setTopCryptoCurrencies] = useState<CryptoCurrencies>([])
+  const [search, setSearch] = useState<Search>(initialSearch)
 
   useEffect(() => {
     async function getTopCryptoCurrencies(): Promise<void> {
@@ -35,16 +38,25 @@ export default function CryptoForm() {
     getTopCryptoCurrencies()
   }, [])
 
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSearch({
+      ...search,
+      [event.target.name]: event.target.value
+    })
+  }
+
   return (
     <form className="space-y-5">
       <div className="space-y-3">
-        <label htmlFor="commoncoin"
+        <label htmlFor="commonCoin"
           className="block text-lg"
         >
           Moneda:
         </label>
-        <select name="commoncoin" id="commoncoin"
+        <select name="commonCoin" id="commonCoin"
           className="w-full px-2 py-2 rounded-md text-lg"
+          onChange={handleChange}
+          value={search.commonCoin}
         >
           <option value="" disabled>--Seleccione--</option>
           {
@@ -56,13 +68,15 @@ export default function CryptoForm() {
       </div>
 
       <div className="space-y-3">
-        <label htmlFor="cryptocoin"
+        <label htmlFor="cryptoCoin"
           className="block text-lg"
         >
           Criptomoneda:
         </label>
-        <select name="cryptocoin" id="cryptocoin"
+        <select name="cryptoCoin" id="cryptoCoin"
           className="w-full px-2 py-2 rounded-md text-lg"
+          onChange={handleChange}
+          value={search.cryptoCoin}
         >
           <option value="" disabled>--Seleccione--</option>
           {

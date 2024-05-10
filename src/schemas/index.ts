@@ -13,3 +13,8 @@ export const CryptoCurrencySchema = z.object({
 })
 
 export const CryptoCurrenciesSchema = z.array(CryptoCurrencySchema)
+
+export const SearchSchema = z.object({
+  commonCoin: z.string(),
+  cryptoCoin: z.string(),
+})
