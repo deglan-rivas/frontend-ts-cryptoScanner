@@ -65,11 +65,11 @@ export default function CryptoForm() {
           className="w-full px-2 py-2 rounded-md text-lg"
         >
           <option value="" disabled>--Seleccione--</option>
-          {/* {
+          {
             topCryptoCurrencies.map((cryptoCurrency) => (
               <option key={cryptoCurrency.CoinInfo.Name} value={cryptoCurrency.CoinInfo.Name}>{cryptoCurrency.CoinInfo.FullName}</option>
             ))
-          } */}
+          }
         </select>
       </div>
 
