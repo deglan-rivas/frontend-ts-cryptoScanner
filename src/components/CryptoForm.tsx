@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { commonCurrencies } from "../data";
 import { CryptoCurrenciesSchema } from "../schemas";
 import { CryptoCurrencies, Search } from "../types";
+import ErrorMessage from "./ErrorMessage";
 
 interface CryptoFormProperties {
   getCryptoConversion: (search: Search) => void
@@ -68,7 +69,10 @@ export default function CryptoForm({ getCryptoConversion }: CryptoFormProperties
       onSubmit={handleSubmit}
     >
       {
-        errors && <p className="text-center text-red-500">{errors}</p>
+        errors &&
+        <ErrorMessage>
+          {errors}
+        </ErrorMessage>
       }
       <div className="space-y-3">
         <label htmlFor="commonCoin"

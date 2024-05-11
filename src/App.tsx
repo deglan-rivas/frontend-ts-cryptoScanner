@@ -44,7 +44,7 @@ function App() {
             Criptomonedas
           </span>
         </h1>
-        <div className="w-full bg-white rounded-md px-5 py-16 space-y-12">
+        <div className="w-full bg-white rounded-md px-5 py-12 space-y-12">
           <CryptoForm
             getCryptoConversion={getCryptoConversion}
           />
