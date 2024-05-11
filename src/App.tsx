@@ -1,7 +1,40 @@
+import { useState } from "react"
 import CryptoDisplay from "./components/CryptoDisplay"
 import CryptoForm from "./components/CryptoForm"
+import { CryptoConversionSchema } from "./schemas"
+import { CryptoConversion, Search } from "./types"
 
 function App() {
+  const initialConversion: CryptoConversion = {
+    IMAGEURL: "",
+    PRICE: "",
+    HIGHDAY: "",
+    LOWDAY: "",
+    CHANGEPCT24HOUR: "",
+    LASTUPDATE: ""
+  }
+  const [cryptoConversion, setCryptoConversion] = useState<CryptoConversion>(initialConversion)
+
+  const getCryptoConversion = async (search: Search): Promise<void> => {
+    try {
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${search.cryptoCoin}&tsyms=${search.commonCoin}`
+      const result = await fetch(url)
+      const { DISPLAY } = await result.json()
+      console.log(DISPLAY)
+      const hasCryptoConversion = CryptoConversionSchema.safeParse(DISPLAY[search.cryptoCoin][search.commonCoin])
+      console.log(hasCryptoConversion)
+      if (!hasCryptoConversion.success) {
+        setCryptoConversion(initialConversion)
+        throw new Error(hasCryptoConversion.error.message)
+      }
+      setCryptoConversion(hasCryptoConversion.data)
+    } catch (error) {
+      console.log(error)
+      setCryptoConversion(initialConversion)
+    }
+
+  }
+
   return (
     <main className="min-h-screen bg-[url(/bg.jpg)] bg-cover bg-center">
       <div className="max-w-xl mx-auto py-6">
@@ -12,8 +45,12 @@ function App() {
           </span>
         </h1>
         <div className="w-full bg-white rounded-md px-5 py-16 space-y-12">
-          <CryptoForm />
-          <CryptoDisplay />
+          <CryptoForm
+            getCryptoConversion={getCryptoConversion}
+          />
+          <CryptoDisplay
+            cryptoConversion={cryptoConversion}
+          />
         </div>
       </div>
     </main>

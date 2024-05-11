@@ -1,20 +1,21 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { commonCurrencies } from "../data";
-import { CryptoConversionSchema, CryptoCurrenciesSchema } from "../schemas";
-import { CryptoConversion, CryptoCurrencies, Search } from "../types";
+import { CryptoCurrenciesSchema } from "../schemas";
+import { CryptoCurrencies, Search } from "../types";
 
-export default function CryptoForm() {
+interface CryptoFormProperties {
+  getCryptoConversion: (search: Search) => void
+}
+
+export default function CryptoForm({ getCryptoConversion }: CryptoFormProperties) {
   const initialSearch: Search = {
     commonCoin: "",
     cryptoCoin: ""
   }
-  const initialConversion: CryptoConversion = {
-    RAW: ""
-  }
+
 
   const [topCryptoCurrencies, setTopCryptoCurrencies] = useState<CryptoCurrencies>([])
   const [search, setSearch] = useState<Search>(initialSearch)
-  const [cryptoConversion, setCryptoConversion] = useState<CryptoConversion>(initialConversion)
 
   useEffect(() => {
     async function getTopCryptoCurrencies(): Promise<void> {
@@ -42,25 +43,7 @@ export default function CryptoForm() {
     getTopCryptoCurrencies()
   }, [])
 
-  const getCryptoConversion = async (search: Search): Promise<void> => {
-    try {
-      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${search.cryptoCoin}&tsyms=${search.commonCoin}`
-      const result = await fetch(url)
-      const { DISPLAY } = await result.json()
-      console.log(DISPLAY)
-      const hasCryptoConversion = CryptoConversionSchema.safeParse(DISPLAY[search.cryptoCoin][search.commonCoin])
-      console.log(hasCryptoConversion)
-      if (!hasCryptoConversion.success) {
-        setCryptoConversion(initialConversion)
-        throw new Error(hasCryptoConversion.error.message)
-      }
-      setCryptoConversion(hasCryptoConversion.data)
-    } catch (error) {
-      console.log(error)
-      setCryptoConversion(initialConversion)
-    }
 
-  }
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSearch({
