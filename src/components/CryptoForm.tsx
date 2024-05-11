@@ -1,16 +1,20 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { commonCurrencies } from "../data";
-import { CryptoCurrenciesSchema } from "../schemas";
-import { CryptoCurrencies, Search } from "../types";
+import { CryptoConversionSchema, CryptoCurrenciesSchema } from "../schemas";
+import { CryptoConversion, CryptoCurrencies, Search } from "../types";
 
 export default function CryptoForm() {
   const initialSearch: Search = {
     commonCoin: "",
     cryptoCoin: ""
   }
+  const initialConversion: CryptoConversion = {
+    RAW: ""
+  }
 
   const [topCryptoCurrencies, setTopCryptoCurrencies] = useState<CryptoCurrencies>([])
   const [search, setSearch] = useState<Search>(initialSearch)
+  const [cryptoConversion, setCryptoConversion] = useState<CryptoConversion>(initialConversion)
 
   useEffect(() => {
     async function getTopCryptoCurrencies(): Promise<void> {
@@ -38,6 +42,26 @@ export default function CryptoForm() {
     getTopCryptoCurrencies()
   }, [])
 
+  const getCryptoConversion = async (search: Search): Promise<void> => {
+    try {
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${search.cryptoCoin}&tsyms=${search.commonCoin}`
+      const result = await fetch(url)
+      const { DISPLAY } = await result.json()
+      console.log(DISPLAY)
+      const hasCryptoConversion = CryptoConversionSchema.safeParse(DISPLAY[search.cryptoCoin][search.commonCoin])
+      console.log(hasCryptoConversion)
+      if (!hasCryptoConversion.success) {
+        setCryptoConversion(initialConversion)
+        throw new Error(hasCryptoConversion.error.message)
+      }
+      setCryptoConversion(hasCryptoConversion.data)
+    } catch (error) {
+      console.log(error)
+      setCryptoConversion(initialConversion)
+    }
+
+  }
+
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSearch({
       ...search,
@@ -45,8 +69,16 @@ export default function CryptoForm() {
     })
   }
 
+  const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log("enviando ...", search)
+    getCryptoConversion(search)
+  }
+
   return (
-    <form className="space-y-5">
+    <form className="space-y-5"
+      onSubmit={handleSubmit}
+    >
       <div className="space-y-3">
         <label htmlFor="commonCoin"
           className="block text-lg"

@@ -18,3 +18,12 @@ export const SearchSchema = z.object({
   commonCoin: z.string(),
   cryptoCoin: z.string(),
 })
+
+export const CryptoConversionSchema = z.object({
+  IMAGEURL: z.string(),
+  PRICE: z.string(),
+  HIGHDAY: z.string(),
+  LOWDAY: z.string(),
+  CHANGEPCT24HOUR: z.string(),
+  LASTUPDATE: z.string()
+})
