@@ -13,9 +13,9 @@ export default function CryptoForm({ getCryptoConversion }: CryptoFormProperties
     cryptoCoin: ""
   }
 
-
   const [topCryptoCurrencies, setTopCryptoCurrencies] = useState<CryptoCurrencies>([])
   const [search, setSearch] = useState<Search>(initialSearch)
+  const [errors, setErrors] = useState("")
 
   useEffect(() => {
     async function getTopCryptoCurrencies(): Promise<void> {
@@ -54,7 +54,12 @@ export default function CryptoForm({ getCryptoConversion }: CryptoFormProperties
 
   const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log("enviando ...", search)
+    // console.log("enviando ...", search)
+    if (Object.values(search).includes("")) {
+      setErrors("Todos los campos son obligatorios")
+      return
+    }
+    setErrors("")
     getCryptoConversion(search)
   }
 
@@ -62,6 +67,9 @@ export default function CryptoForm({ getCryptoConversion }: CryptoFormProperties
     <form className="space-y-5"
       onSubmit={handleSubmit}
     >
+      {
+        errors && <p className="text-center text-red-500">{errors}</p>
+      }
       <div className="space-y-3">
         <label htmlFor="commonCoin"
           className="block text-lg"
