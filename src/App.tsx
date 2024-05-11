@@ -48,9 +48,13 @@ function App() {
           <CryptoForm
             getCryptoConversion={getCryptoConversion}
           />
-          <CryptoDisplay
-            cryptoConversion={cryptoConversion}
-          />
+          {
+            cryptoConversion.IMAGEURL && (
+              <CryptoDisplay
+                cryptoConversion={cryptoConversion}
+              />
+            )
+          }
         </div>
       </div>
     </main>
