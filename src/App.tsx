@@ -1,6 +1,7 @@
 import { useState } from "react"
 import CryptoDisplay from "./components/CryptoDisplay"
 import CryptoForm from "./components/CryptoForm"
+import Spinner from "./components/Spinner"
 import { CryptoConversionSchema } from "./schemas"
 import { CryptoConversion, Search } from "./types"
 
@@ -14,9 +15,12 @@ function App() {
     LASTUPDATE: ""
   }
   const [cryptoConversion, setCryptoConversion] = useState<CryptoConversion>(initialConversion)
+  const [loading, setLoading] = useState(false)
 
   const getCryptoConversion = async (search: Search): Promise<void> => {
     try {
+      setCryptoConversion(initialConversion)
+      setLoading(true)
       const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${search.cryptoCoin}&tsyms=${search.commonCoin}`
       const result = await fetch(url)
       const { DISPLAY } = await result.json()
@@ -31,6 +35,8 @@ function App() {
     } catch (error) {
       console.log(error)
       setCryptoConversion(initialConversion)
+    } finally {
+      setLoading(false)
     }
 
   }
@@ -48,6 +54,11 @@ function App() {
           <CryptoForm
             getCryptoConversion={getCryptoConversion}
           />
+          {
+            loading && (
+              <Spinner />
+            )
+          }
           {
             cryptoConversion.IMAGEURL && (
               <CryptoDisplay
