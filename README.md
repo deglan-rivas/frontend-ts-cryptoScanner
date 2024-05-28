@@ -9,8 +9,12 @@
 ## 📜 Description
 
 - Due to its practicality, **Vite** was chosen to initialize, minify, and create the production *bundle*.
+- **TypeScript** was employed to enhance code quality with static typing and improved developer tooling.
 - **React**, **TailwindCSS** were used to quickly layout complex components.
+- **Zod** was used for schema validation to ensure the correctness of data structures.
 - The project is deployed on [**Netlify**](https://euphonious-genie-8120bf.netlify.app/). Additionally, the final code is dockerized for local testing.
+- **Update1 - release/migrate_zustand**: Implemented Zustand for state management to handle complex application states efficiently.
+- **Update2 - release/add_testing**: Added testing frameworks **React Testing Library**, **Jest**, and **Mock Service Worker** for unit and integration testing.
 
 ## 🚀 Getting Started
 
